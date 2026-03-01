@@ -98,7 +98,7 @@ public class ConsoleUI {
     }
 
     private void processRead(User user) {
-        System.out.print("Над каким объектом производится операция? ");
+        System.out.print(Constants.PROMPT_READ_OBJECT);
         String objectName = scanner.nextLine().trim();
         Optional<SystemObject> object = accessMatrixService.findObject(objectName);
         if (object.isEmpty()) {
@@ -113,7 +113,7 @@ public class ConsoleUI {
     }
 
     private void processWrite(User user) {
-        System.out.print("Над каким объектом производится операция? ");
+        System.out.print(Constants.PROMPT_WRITE_OBJECT);
         String objectName = scanner.nextLine().trim();
         Optional<SystemObject> object = accessMatrixService.findObject(objectName);
         if (object.isEmpty()) {
@@ -128,7 +128,7 @@ public class ConsoleUI {
     }
 
     private void processGrant(User user) {
-        System.out.print("Право на какой объект передается? ");
+        System.out.print(Constants.PROMPT_GRANT_OBJECT);
         String objectName = scanner.nextLine().trim();
         Optional<SystemObject> object = accessMatrixService.findObject(objectName);
         if (object.isEmpty()) {
@@ -136,7 +136,7 @@ public class ConsoleUI {
             return;
         }
 
-        System.out.print("Какое право передается? ");
+        System.out.print(Constants.PROMPT_GRANT_RIGHT);
         String rightStr = scanner.nextLine().trim();
         Right right = Right.fromString(rightStr);
         if (right == null) {
@@ -144,7 +144,7 @@ public class ConsoleUI {
             return;
         }
 
-        System.out.print("Какому пользователю передается право? ");
+        System.out.print(Constants.PROMPT_GRANT_USER);
         String targetUserName = scanner.nextLine().trim();
         Optional<User> targetUser = accessMatrixService.findUser(targetUserName);
         if (targetUser.isEmpty()) {
@@ -156,7 +156,6 @@ public class ConsoleUI {
         if (success) {
             System.out.println(Constants.MSG_ACCESS_GRANTED);
         } else {
-            // Детализация причины отказа
             if (!authorizationService.canGrant(user, objectName)) {
                 System.out.println(Constants.MSG_NO_GRANT_RIGHT);
             } else {

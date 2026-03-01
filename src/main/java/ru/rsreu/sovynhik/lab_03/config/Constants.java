@@ -4,8 +4,8 @@ public final class Constants {
     private Constants() {}
 
     // Конфигурация системы
-    public static final int USER_COUNT = 3;
-    public static final int OBJECT_COUNT = 5;
+    public static final int USER_COUNT = 9;
+    public static final int OBJECT_COUNT = 10;
     public static final int MAX_ACCESS_LEVEL = 4;
 
     // Имена пользователей
@@ -21,7 +21,7 @@ public final class Constants {
     public static final String RIGHT_GRANT = "Передача прав";
     public static final String RIGHT_DENIED = "Запрет";
 
-    // Алиасы команд (для ввода)
+    // Алиасы команд
     public static final String CMD_READ = "read";
     public static final String CMD_WRITE = "write";
     public static final String CMD_GRANT = "grant";
@@ -35,7 +35,7 @@ public final class Constants {
     public static final String ALIAS_GRANT_RU = "Передача прав";
     public static final String ALIAS_GRANT_EN = "grant";
 
-    // Сообщения пользователю
+    // Сообщения (общие)
     public static final String MSG_WELCOME = "=== Система дискреционного доступа (DAC) ===";
     public static final String MSG_STATS = "Пользователей: %d, Объектов: %d";
     public static final String MSG_SEPARATOR = "===========================================";
@@ -60,6 +60,13 @@ public final class Constants {
     public static final String MSG_NO_RIGHTS = "Нет прав";
     public static final String MSG_SYSTEM_INIT = "Система инициализирована. Пользователей: %d, Объектов: %d";
     public static final String MSG_ENTER_COMMAND = "Введите команду";
+
+    // Сообщения для диалоговых запросов
+    public static final String PROMPT_READ_OBJECT = "Над каким объектом производится операция? ";
+    public static final String PROMPT_WRITE_OBJECT = "Над каким объектом производится операция? ";
+    public static final String PROMPT_GRANT_OBJECT = "Право на какой объект передается? ";
+    public static final String PROMPT_GRANT_RIGHT = "Какое право передается? ";
+    public static final String PROMPT_GRANT_USER = "Какому пользователю передается право? ";
 
     // Форматы
     public static final String GRANT_FORMAT = "grant объект право пользователь";
