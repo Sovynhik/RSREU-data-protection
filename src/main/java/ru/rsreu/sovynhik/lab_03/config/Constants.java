@@ -4,8 +4,8 @@ public final class Constants {
     private Constants() {}
 
     // Конфигурация системы
-    public static final int USER_COUNT = 9;
-    public static final int OBJECT_COUNT = 10;
+    public static final int USER_COUNT = 3;
+    public static final int OBJECT_COUNT = 5;
     public static final int MAX_ACCESS_LEVEL = 4;
 
     // Имена пользователей
