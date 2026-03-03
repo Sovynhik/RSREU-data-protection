@@ -1,4 +1,4 @@
-package ru.rsreu.sovynhik.lab_03.config;
+package ru.rsreu.sovynhik.pract_03.config;
 
 public final class Constants {
     private Constants() {}

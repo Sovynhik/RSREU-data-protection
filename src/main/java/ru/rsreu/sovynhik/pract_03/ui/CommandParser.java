@@ -1,4 +1,4 @@
-package ru.rsreu.sovynhik.lab_03.ui;
+package ru.rsreu.sovynhik.pract_03.ui;
 
 public class CommandParser {
 

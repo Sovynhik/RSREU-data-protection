@@ -1,9 +1,9 @@
-package ru.rsreu.sovynhik.lab_03.service;
+package ru.rsreu.sovynhik.pract_03.service;
 
-import ru.rsreu.sovynhik.lab_03.config.Constants;
-import ru.rsreu.sovynhik.lab_03.model.Right;
-import ru.rsreu.sovynhik.lab_03.model.User;
-import ru.rsreu.sovynhik.lab_03.ui.CommandParser.CommandResult;
+import ru.rsreu.sovynhik.pract_03.config.Constants;
+import ru.rsreu.sovynhik.pract_03.model.Right;
+import ru.rsreu.sovynhik.pract_03.model.User;
+import ru.rsreu.sovynhik.pract_03.ui.CommandParser.CommandResult;
 
 public class CommandProcessor {
     private final AuthorizationService authorizationService;

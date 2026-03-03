@@ -1,6 +1,6 @@
-package ru.rsreu.sovynhik.lab_03.repository;
+package ru.rsreu.sovynhik.pract_03.repository;
 
-import ru.rsreu.sovynhik.lab_03.model.User;
+import ru.rsreu.sovynhik.pract_03.model.User;
 import java.util.*;
 
 public class UserRepository {

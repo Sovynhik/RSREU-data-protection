@@ -1,6 +1,6 @@
-package ru.rsreu.sovynhik.lab_03.model;
+package ru.rsreu.sovynhik.pract_03.model;
 
-import ru.rsreu.sovynhik.lab_03.config.Constants;
+import ru.rsreu.sovynhik.pract_03.config.Constants;
 
 public enum Right {
     READ(Constants.RIGHT_READ, Constants.ALIAS_READ_RU, Constants.ALIAS_READ_EN),
