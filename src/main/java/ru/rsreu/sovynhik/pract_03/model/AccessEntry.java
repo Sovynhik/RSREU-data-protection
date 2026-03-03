@@ -1,4 +1,4 @@
-package ru.rsreu.sovynhik.lab_03.model;
+package ru.rsreu.sovynhik.pract_03.model;
 
 import java.util.Objects;
 

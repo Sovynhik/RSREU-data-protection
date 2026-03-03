@@ -1,8 +1,8 @@
-package ru.rsreu.sovynhik.lab_03.service;
+package ru.rsreu.sovynhik.pract_03.service;
 
-import ru.rsreu.sovynhik.lab_03.config.Constants;
-import ru.rsreu.sovynhik.lab_03.model.*;
-import ru.rsreu.sovynhik.lab_03.repository.*;
+import ru.rsreu.sovynhik.pract_03.config.Constants;
+import ru.rsreu.sovynhik.pract_03.model.*;
+import ru.rsreu.sovynhik.pract_03.repository.*;
 import java.util.*;
 
 public class AccessMatrixService {
