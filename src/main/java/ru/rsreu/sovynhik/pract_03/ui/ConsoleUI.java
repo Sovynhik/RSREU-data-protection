@@ -21,19 +21,19 @@ public class ConsoleUI {
     }
 
     public void start() {
-        printWelcomeMessage();
+//        printWelcomeMessage();
         while (true) {
             Optional<User> currentUser = login();
             currentUser.ifPresent(this::userSession);
         }
     }
 
-    private void printWelcomeMessage() {
-        System.out.println(Constants.MSG_WELCOME);
-        System.out.printf(Constants.MSG_STATS + "\n",
-                Constants.USER_COUNT, Constants.OBJECT_COUNT);
-        System.out.println(Constants.MSG_SEPARATOR);
-    }
+//    private void printWelcomeMessage() {
+//        System.out.println(Constants.MSG_WELCOME);
+//        System.out.printf(Constants.MSG_STATS + "\n",
+//                Constants.USER_COUNT, Constants.OBJECT_COUNT);
+//        System.out.println(Constants.MSG_SEPARATOR);
+//    }
 
     private Optional<User> login() {
         System.out.print(Constants.MSG_ENTER_USER);
@@ -90,6 +90,9 @@ public class ConsoleUI {
                     break;
                 case Constants.CMD_GRANT:
                     processGrant(user);
+                    break;
+                case Constants.CMD_SHOW:
+                    processShow();
                     break;
                 default:
                     System.out.println(Constants.MSG_UNKNOWN_COMMAND);
@@ -152,6 +155,18 @@ public class ConsoleUI {
             return;
         }
 
+        // Проверка, есть ли уже у целевого пользователя это право
+        if (accessMatrixService.checkAccess(targetUser.get(), objectName, right)) {
+            System.out.println(Constants.MSG_RIGHT_ALREADY_EXISTS);
+            return;
+        }
+
+        // Проверка, не станет ли целевой пользователь администратором
+        if (accessMatrixService.wouldTransferMakeAdmin(targetUser.get(), objectName, right)) {
+            System.out.println(Constants.MSG_CANT_MAKE_ADMIN);
+            return;
+        }
+
         boolean success = accessMatrixService.transferRight(user, objectName, right, targetUserName);
         if (success) {
             System.out.println(Constants.MSG_ACCESS_GRANTED);
@@ -161,6 +176,20 @@ public class ConsoleUI {
             } else {
                 System.out.println(Constants.MSG_NO_RIGHT_TO_TRANSFER);
             }
+        }
+    }
+
+    private void processShow() {
+        Map<User, Map<SystemObject, Set<Right>>> matrix = accessMatrixService.getAllRightsMatrix();
+        System.out.println("\nМатрица доступа:");
+        for (Map.Entry<User, Map<SystemObject, Set<Right>>> userEntry : matrix.entrySet()) {
+            User user = userEntry.getKey();
+            System.out.print(user.getName() + (user.isAdmin() ? " (админ)" : "") + ": ");
+            for (Map.Entry<SystemObject, Set<Right>> objEntry : userEntry.getValue().entrySet()) {
+                String rightsStr = formatRights(objEntry.getValue());
+                System.out.print(objEntry.getKey().getName() + "=[" + rightsStr + "] ");
+            }
+            System.out.println();
         }
     }
 }

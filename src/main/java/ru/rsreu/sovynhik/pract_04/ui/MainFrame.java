@@ -147,7 +147,7 @@ public class MainFrame extends JFrame {
 
     private void setDefaultValues() {
         fieldP.setText("1e-4");
-        fieldV.setText("3");
+        fieldV.setText("9");
         fieldT.setText("15");
         fieldUserCount.setText("10");
     }

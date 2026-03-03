@@ -21,14 +21,12 @@ public class AccessMatrixService {
 
     public void initializeMatrix() {
         accessMatrixRepository.clear();
-
         for (User user : userRepository.findAll()) {
             for (SystemObject object : objectRepository.findAll()) {
                 Set<Right> rights = generateRightsForUser(user);
                 accessMatrixRepository.setRights(user, object, rights);
             }
         }
-
         System.out.printf(Constants.MSG_SYSTEM_INIT + "\n",
                 userRepository.getCount(), objectRepository.getCount());
     }
@@ -37,59 +35,77 @@ public class AccessMatrixService {
         if (user.isAdmin()) {
             return new HashSet<>(Arrays.asList(Right.READ, Right.WRITE, Right.GRANT));
         }
-
         Set<Right> rights = new HashSet<>();
-        int accessLevel = random.nextInt(Constants.MAX_ACCESS_LEVEL);
-
-        switch (accessLevel) {
-            case 0:
-                rights.add(Right.DENIED);
-                break;
-            case 1:
-                rights.add(Right.READ);
-                break;
-            case 2:
-                rights.add(Right.WRITE);
-                break;
-            case 3:
-                rights.addAll(Arrays.asList(Right.READ, Right.WRITE));
-                break;
-            default:
-                rights.add(Right.DENIED);
+        rights.add(Right.GRANT); // обязательно для всех обычных пользователей
+        if (random.nextBoolean()) {
+            rights.add(Right.READ);
+        }
+        if (random.nextBoolean()) {
+            rights.add(Right.WRITE);
         }
         return rights;
     }
 
     public boolean checkAccess(User user, String objectName, Right requiredRight) {
         Optional<SystemObject> object = objectRepository.findByName(objectName);
-        if (object.isEmpty()) return false;
+        return object.filter(o -> accessMatrixRepository.hasRight(user, o, requiredRight)).isPresent();
+    }
 
-        return accessMatrixRepository.hasRight(user, object.get(), requiredRight);
+    /**
+     * Проверяет, приведёт ли передача права к тому, что целевой пользователь
+     * получит полные права (READ, WRITE, GRANT) на все объекты.
+     */
+    public boolean wouldTransferMakeAdmin(User toUser, String objectName, Right right) {
+        Optional<SystemObject> obj = objectRepository.findByName(objectName);
+        if (obj.isEmpty()) return false;
+        return wouldBecomeAdmin(toUser, obj.get(), right);
+    }
+
+    private boolean wouldBecomeAdmin(User target, SystemObject targetObject, Right newRight) {
+        if (target.isAdmin()) return false; // админ уже есть, но это не наш случай
+
+        // Проверяем, есть ли у target уже все права на всех объектах, кроме целевого
+        for (SystemObject obj : objectRepository.findAll()) {
+            if (obj.equals(targetObject)) continue;
+            if (!hasAllRights(target, obj)) {
+                return false; // на каком-то другом объекте не все права, значит не станет админом
+            }
+        }
+
+        // Проверяем, будут ли у target все права на целевом объекте после добавления
+        Set<Right> currentRights = accessMatrixRepository.getRights(target, targetObject);
+        Set<Right> afterRights = new HashSet<>(currentRights);
+        afterRights.add(newRight);
+        return afterRights.containsAll(List.of(Right.READ, Right.WRITE, Right.GRANT));
+    }
+
+    private boolean hasAllRights(User user, SystemObject object) {
+        Set<Right> rights = accessMatrixRepository.getRights(user, object);
+        return rights.containsAll(List.of(Right.READ, Right.WRITE, Right.GRANT));
     }
 
     public boolean transferRight(User from, String objectName, Right right, String toUserName) {
         if (right == null || right.isDenied()) return false;
-
         Optional<SystemObject> object = objectRepository.findByName(objectName);
         Optional<User> toUser = userRepository.findByName(toUserName);
+        if (object.isEmpty() || toUser.isEmpty()) return false;
 
-        if (object.isEmpty() || toUser.isEmpty()) {
+        // Проверка права на передачу у from
+        if (!from.isAdmin() && !accessMatrixRepository.hasRight(from, object.get(), Right.GRANT))
+            return false;
+        if (!from.isAdmin() && !accessMatrixRepository.hasRight(from, object.get(), right))
+            return false;
+
+        // Проверка, не станет ли получатель администратором
+        if (wouldBecomeAdmin(toUser.get(), object.get(), right)) {
             return false;
         }
 
-        // Проверяем право на передачу
-        if (!from.isAdmin() &&
-                !accessMatrixRepository.hasRight(from, object.get(), Right.GRANT)) {
+        // Если у получателя уже есть это право, ничего не делаем
+        if (accessMatrixRepository.hasRight(toUser.get(), object.get(), right)) {
             return false;
         }
 
-        // Проверяем наличие передаваемого права
-        if (!from.isAdmin() &&
-                !accessMatrixRepository.hasRight(from, object.get(), right)) {
-            return false;
-        }
-
-        // Передаем право
         accessMatrixRepository.addRight(toUser.get(), object.get(), right);
         return true;
     }
@@ -108,5 +124,21 @@ public class AccessMatrixService {
 
     public Optional<User> findUser(String name) {
         return userRepository.findByName(name);
+    }
+
+    public List<SystemObject> getAllObjects() {
+        return objectRepository.findAll();
+    }
+
+    public Map<User, Map<SystemObject, Set<Right>>> getAllRightsMatrix() {
+        Map<User, Map<SystemObject, Set<Right>>> matrix = new LinkedHashMap<>();
+        for (User user : userRepository.findAll()) {
+            Map<SystemObject, Set<Right>> userRights = new LinkedHashMap<>();
+            for (SystemObject object : objectRepository.findAll()) {
+                userRights.put(object, accessMatrixRepository.getRights(user, object));
+            }
+            matrix.put(user, userRights);
+        }
+        return matrix;
     }
 }
