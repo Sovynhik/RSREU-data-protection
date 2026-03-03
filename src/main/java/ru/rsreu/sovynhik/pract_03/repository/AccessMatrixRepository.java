@@ -21,14 +21,9 @@ public class AccessMatrixRepository {
 
     public void addRight(User user, SystemObject object, Right right) {
         if (right == null || right.isDenied()) return;
-
         AccessEntry key = new AccessEntry(user, object);
         matrix.computeIfAbsent(key, k -> new HashSet<>()).add(right);
-
-        // Если добавляем право, убираем запрет
-        if (!right.isDenied()) {
-            matrix.get(key).remove(Right.DENIED);
-        }
+        matrix.get(key).remove(Right.DENIED);
     }
 
     public void removeRight(User user, SystemObject object, Right right) {
@@ -41,7 +36,6 @@ public class AccessMatrixRepository {
 
     public boolean hasRight(User user, SystemObject object, Right right) {
         if (user.isAdmin()) return true;
-
         AccessEntry key = new AccessEntry(user, object);
         Set<Right> rights = matrix.get(key);
         return rights != null && rights.contains(right);

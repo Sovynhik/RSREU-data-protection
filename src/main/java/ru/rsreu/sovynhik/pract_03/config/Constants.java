@@ -3,16 +3,9 @@ package ru.rsreu.sovynhik.pract_03.config;
 public final class Constants {
     private Constants() {}
 
-    // Конфигурация системы
-    public static final int USER_COUNT = 3;
-    public static final int OBJECT_COUNT = 5;
-    public static final int MAX_ACCESS_LEVEL = 4;
-
-    // Имена пользователей
+    // Префиксы имен
     public static final String ADMIN_NAME = "Admin";
     public static final String USER_PREFIX = "User";
-
-    // Имена объектов
     public static final String OBJECT_PREFIX = "Объект_";
 
     // Права доступа
@@ -26,6 +19,7 @@ public final class Constants {
     public static final String CMD_WRITE = "write";
     public static final String CMD_GRANT = "grant";
     public static final String CMD_QUIT = "quit";
+    public static final String CMD_SHOW = "show";
 
     // Алиасы прав (для ввода)
     public static final String ALIAS_READ_RU = "Чтение";
@@ -47,7 +41,7 @@ public final class Constants {
     public static final String MSG_RIGHTS_FORMAT = "  %s: %s";
     public static final String MSG_PROMPT = "\nЖду ваших указаний > ";
     public static final String MSG_GOODBYE = "Работа пользователя %s завершена. До свидания.";
-    public static final String MSG_UNKNOWN_COMMAND = "Неизвестная команда. Попробуйте: read/write/grant/quit";
+    public static final String MSG_UNKNOWN_COMMAND = "Неизвестная команда. Попробуйте: read/write/grant/show/quit";
     public static final String MSG_INVALID_FORMAT = "Неверный формат. Используйте: %s";
     public static final String MSG_OBJECT_NOT_FOUND = "Объект не найден.";
     public static final String MSG_USER_NOT_FOUND = "Пользователь не найден.";
@@ -60,6 +54,8 @@ public final class Constants {
     public static final String MSG_NO_RIGHTS = "Нет прав";
     public static final String MSG_SYSTEM_INIT = "Система инициализирована. Пользователей: %d, Объектов: %d";
     public static final String MSG_ENTER_COMMAND = "Введите команду";
+    public static final String MSG_RIGHT_ALREADY_EXISTS = "Пользователь уже имеет данное право.";
+    public static final String MSG_CANT_MAKE_ADMIN = "Нельзя передать права: пользователь станет администратором (получит все права на все объекты).";
 
     // Сообщения для диалоговых запросов
     public static final String PROMPT_READ_OBJECT = "Над каким объектом производится операция? ";
@@ -70,4 +66,5 @@ public final class Constants {
 
     // Форматы
     public static final String GRANT_FORMAT = "grant объект право пользователь";
+    public static final String COMMANDS_HELP = "read/write/grant/show/quit";
 }
