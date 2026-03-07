@@ -77,15 +77,35 @@ public class MainFrame extends JFrame {
         JPanel panel = new JPanel(new GridBagLayout());
         panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        JButton btnGenerate = new JButton("Сгенерировать");
-        btnGenerate.setFont(new Font("SansSerif", Font.BOLD, 16));
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.insets = new Insets(5, 5, 5, 5);
+
+        // Кнопка генерации паролей (вторая часть)
+        JButton btnGenerate = new JButton("Генератор паролей");
+        btnGenerate.setFont(new Font("SansSerif", Font.BOLD, 14));
         btnGenerate.setBackground(new Color(0, 120, 215));
         btnGenerate.setForeground(Color.WHITE);
         btnGenerate.setFocusPainted(false);
-        btnGenerate.setPreferredSize(new Dimension(200, 50));
+        btnGenerate.setPreferredSize(new Dimension(220, 50));
         btnGenerate.addActionListener(e -> generate());
+        panel.add(btnGenerate, gbc);
 
-        panel.add(btnGenerate);
+        // Кнопка метода "запрос-ответ" (первая часть)
+        gbc.gridy = 1;
+        JButton btnAuth = new JButton("Метод запрос-ответ");
+        btnAuth.setFont(new Font("SansSerif", Font.BOLD, 14));
+        btnAuth.setBackground(new Color(0, 150, 100));
+        btnAuth.setForeground(Color.WHITE);
+        btnAuth.setFocusPainted(false);
+        btnAuth.setPreferredSize(new Dimension(220, 50));
+        btnAuth.addActionListener(e -> {
+            AuthDialog dialog = new AuthDialog(this);
+            dialog.setVisible(true);
+        });
+        panel.add(btnAuth, gbc);
+
         return panel;
     }
 
