@@ -17,8 +17,4 @@ public class AuthenticationService {
         }
         return userRepository.findByName(username.trim());
     }
-
-    public boolean isUserExists(String username) {
-        return userRepository.exists(username);
-    }
 }

@@ -24,8 +24,4 @@ public class ObjectRepository {
     public int getCount() {
         return objects.size();
     }
-
-    public boolean exists(String name) {
-        return objectMap.containsKey(name.toLowerCase());
-    }
 }

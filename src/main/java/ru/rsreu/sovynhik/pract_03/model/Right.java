@@ -39,16 +39,4 @@ public enum Right {
     public boolean isDenied() {
         return this == DENIED;
     }
-
-    public boolean isRead() {
-        return this == READ;
-    }
-
-    public boolean isWrite() {
-        return this == WRITE;
-    }
-
-    public boolean isGrant() {
-        return this == GRANT;
-    }
 }

@@ -26,14 +26,6 @@ public class AccessMatrixRepository {
         matrix.get(key).remove(Right.DENIED);
     }
 
-    public void removeRight(User user, SystemObject object, Right right) {
-        AccessEntry key = new AccessEntry(user, object);
-        matrix.computeIfPresent(key, (k, v) -> {
-            v.remove(right);
-            return v.isEmpty() ? new HashSet<>(Set.of(Right.DENIED)) : v;
-        });
-    }
-
     public boolean hasRight(User user, SystemObject object, Right right) {
         if (user.isAdmin()) return true;
         AccessEntry key = new AccessEntry(user, object);

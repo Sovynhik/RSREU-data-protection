@@ -24,8 +24,4 @@ public class UserRepository {
     public int getCount() {
         return users.size();
     }
-
-    public boolean exists(String name) {
-        return userMap.containsKey(name.toLowerCase());
-    }
 }
