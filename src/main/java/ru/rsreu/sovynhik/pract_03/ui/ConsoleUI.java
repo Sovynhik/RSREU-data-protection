@@ -21,19 +21,17 @@ public class ConsoleUI {
     }
 
     public void start() {
-//        printWelcomeMessage();
+        printWelcomeMessage();
         while (true) {
             Optional<User> currentUser = login();
             currentUser.ifPresent(this::userSession);
         }
     }
 
-//    private void printWelcomeMessage() {
-//        System.out.println(Constants.MSG_WELCOME);
-//        System.out.printf(Constants.MSG_STATS + "\n",
-//                Constants.USER_COUNT, Constants.OBJECT_COUNT);
-//        System.out.println(Constants.MSG_SEPARATOR);
-//    }
+    private void printWelcomeMessage() {
+        System.out.println(Constants.MSG_WELCOME);
+        System.out.println(Constants.MSG_SEPARATOR);
+    }
 
     private Optional<User> login() {
         System.out.print(Constants.MSG_ENTER_USER);
