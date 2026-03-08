@@ -31,7 +31,6 @@ public final class Constants {
 
     // Сообщения (общие)
     public static final String MSG_WELCOME = "=== Система дискреционного доступа (DAC) ===";
-    public static final String MSG_STATS = "Пользователей: %d, Объектов: %d";
     public static final String MSG_SEPARATOR = "===========================================";
     public static final String MSG_ENTER_USER = "\nВведите идентификатор пользователя: ";
     public static final String MSG_AUTH_SUCCESS = "\nИдентификация прошла успешно, добро пожаловать в систему, %s! %s";
@@ -66,5 +65,4 @@ public final class Constants {
 
     // Форматы
     public static final String GRANT_FORMAT = "grant объект право пользователь";
-    public static final String COMMANDS_HELP = "read/write/grant/show/quit";
 }
