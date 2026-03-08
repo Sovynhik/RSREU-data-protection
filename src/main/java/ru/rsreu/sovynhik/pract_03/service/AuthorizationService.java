@@ -21,8 +21,4 @@ public class AuthorizationService {
     public boolean canGrant(User user, String objectName) {
         return accessMatrixService.checkAccess(user, objectName, Right.GRANT);
     }
-
-    public boolean hasAnyRight(User user, String objectName) {
-        return canRead(user, objectName) || canWrite(user, objectName) || canGrant(user, objectName);
-    }
 }

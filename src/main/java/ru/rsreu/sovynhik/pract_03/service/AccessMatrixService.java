@@ -126,10 +126,6 @@ public class AccessMatrixService {
         return userRepository.findByName(name);
     }
 
-    public List<SystemObject> getAllObjects() {
-        return objectRepository.findAll();
-    }
-
     public Map<User, Map<SystemObject, Set<Right>>> getAllRightsMatrix() {
         Map<User, Map<SystemObject, Set<Right>>> matrix = new LinkedHashMap<>();
         for (User user : userRepository.findAll()) {
