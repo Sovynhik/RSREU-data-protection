@@ -9,10 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AuthDialog extends JDialog {
-    private JTextField loginField;
-    private JPanel questionsPanel;
+    private final JTextField loginField;
+    private final JPanel questionsPanel;
     private List<QuestionAnswer> selectedQuestions;
     private List<JTextField> answerFields;
+    private int attemptCount = 0;
+    private static final int MAX_ATTEMPTS = 3;
 
     public AuthDialog(JFrame parent) {
         super(parent, "Метод запрос-ответ", true);
@@ -35,7 +37,6 @@ public class AuthDialog extends JDialog {
 
         // Нижняя панель с кнопками
         JPanel bottomPanel = new JPanel();
-
         JButton startButton = new JButton("Начать");
         startButton.addActionListener(e -> startAuthentication());
         bottomPanel.add(startButton);
@@ -54,20 +55,18 @@ public class AuthDialog extends JDialog {
             return;
         }
 
-        // Проверяем существование пользователя
         if (UserDatabase.findUser(login) == null) {
             JOptionPane.showMessageDialog(this, "Пользователь не найден", "Ошибка", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        // Получаем случайные вопросы для данного пользователя
         selectedQuestions = UserDatabase.getRandomQuestionsForUser(login, 3);
         answerFields = new ArrayList<>();
 
         questionsPanel.removeAll();
         for (QuestionAnswer qa : selectedQuestions) {
             JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT));
-            row.add(new JLabel(qa.getQuestion()));
+            row.add(new JLabel(qa.question()));
             JTextField answerField = new JTextField(15);
             answerFields.add(answerField);
             row.add(answerField);
@@ -97,7 +96,26 @@ public class AuthDialog extends JDialog {
             JOptionPane.showMessageDialog(this, "Доступ разрешён!", "Успех", JOptionPane.INFORMATION_MESSAGE);
             dispose();
         } else {
-            JOptionPane.showMessageDialog(this, "Неверные ответы. Доступ запрещён.", "Ошибка", JOptionPane.ERROR_MESSAGE);
+            attemptCount++;
+            if (attemptCount >= MAX_ATTEMPTS) {
+                JOptionPane.showMessageDialog(this,
+                        "Превышено число попыток. Доступ заблокирован на 30 секунд.",
+                        "Блокировка", JOptionPane.WARNING_MESSAGE);
+                setEnabled(false); // блокируем диалог
+                new Thread(() -> {
+                    try {
+                        Thread.sleep(30000);
+                    } catch (InterruptedException ex) {
+                        Thread.currentThread().interrupt();
+                    } finally {
+                        SwingUtilities.invokeLater(() -> dispose());
+                    }
+                }).start();
+            } else {
+                JOptionPane.showMessageDialog(this,
+                        "Неверные ответы. Осталось попыток: " + (MAX_ATTEMPTS - attemptCount),
+                        "Ошибка", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }
 }
