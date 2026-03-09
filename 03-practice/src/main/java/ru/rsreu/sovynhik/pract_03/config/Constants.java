@@ -1,27 +1,27 @@
 package ru.rsreu.sovynhik.pract_03.config;
 
+/**
+ * Содержит константы, используемые в системе дискреционного управления доступом (DAC).
+ * Включает префиксы имен, права доступа, команды, сообщения и форматы ввода.
+ */
 public final class Constants {
     private Constants() {}
 
-    // Префиксы имен
     public static final String ADMIN_NAME = "Admin";
     public static final String USER_PREFIX = "User";
     public static final String OBJECT_PREFIX = "Объект_";
 
-    // Права доступа
     public static final String RIGHT_READ = "Чтение";
     public static final String RIGHT_WRITE = "Запись";
     public static final String RIGHT_GRANT = "Передача прав";
     public static final String RIGHT_DENIED = "Запрет";
 
-    // Алиасы команд
     public static final String CMD_READ = "read";
     public static final String CMD_WRITE = "write";
     public static final String CMD_GRANT = "grant";
     public static final String CMD_QUIT = "quit";
     public static final String CMD_SHOW = "show";
 
-    // Алиасы прав (для ввода)
     public static final String ALIAS_READ_RU = "Чтение";
     public static final String ALIAS_READ_EN = "read";
     public static final String ALIAS_WRITE_RU = "Запись";
@@ -29,7 +29,6 @@ public final class Constants {
     public static final String ALIAS_GRANT_RU = "Передача прав";
     public static final String ALIAS_GRANT_EN = "grant";
 
-    // Сообщения (общие)
     public static final String MSG_WELCOME = "=== Система дискреционного доступа (DAC) ===";
     public static final String MSG_SEPARATOR = "===========================================";
     public static final String MSG_ENTER_USER = "\nВведите идентификатор пользователя: ";
@@ -41,7 +40,6 @@ public final class Constants {
     public static final String MSG_PROMPT = "\nЖду ваших указаний > ";
     public static final String MSG_GOODBYE = "Работа пользователя %s завершена. До свидания.";
     public static final String MSG_UNKNOWN_COMMAND = "Неизвестная команда. Попробуйте: read/write/grant/show/quit";
-    public static final String MSG_INVALID_FORMAT = "Неверный формат. Используйте: %s";
     public static final String MSG_OBJECT_NOT_FOUND = "Объект не найден.";
     public static final String MSG_USER_NOT_FOUND = "Пользователь не найден.";
     public static final String MSG_RIGHT_NOT_FOUND = "Неизвестное право. Доступно: Чтение, Запись, Передача прав";
@@ -49,20 +47,14 @@ public final class Constants {
     public static final String MSG_NO_RIGHT_TO_TRANSFER = "Отказ в выполнении операции. Вы не можете передать право, которым не обладаете.";
     public static final String MSG_ACCESS_DENIED = "Отказ в выполнении операции. У Вас нет прав для ее осуществления.";
     public static final String MSG_ACCESS_GRANTED = "Операция прошла успешно.";
-    public static final String MSG_GRANT_SUCCESS = "Операция прошла успешно. Право '%s' на объект %s передано пользователю %s.";
     public static final String MSG_NO_RIGHTS = "Нет прав";
     public static final String MSG_SYSTEM_INIT = "Система инициализирована. Пользователей: %d, Объектов: %d";
-    public static final String MSG_ENTER_COMMAND = "Введите команду";
     public static final String MSG_RIGHT_ALREADY_EXISTS = "Пользователь уже имеет данное право.";
     public static final String MSG_CANT_MAKE_ADMIN = "Нельзя передать права: пользователь станет администратором (получит все права на все объекты).";
 
-    // Сообщения для диалоговых запросов
     public static final String PROMPT_READ_OBJECT = "Над каким объектом производится операция? ";
     public static final String PROMPT_WRITE_OBJECT = "Над каким объектом производится операция? ";
     public static final String PROMPT_GRANT_OBJECT = "Право на какой объект передается? ";
     public static final String PROMPT_GRANT_RIGHT = "Какое право передается? ";
     public static final String PROMPT_GRANT_USER = "Какому пользователю передается право? ";
-
-    // Форматы
-    public static final String GRANT_FORMAT = "grant объект право пользователь";
 }
