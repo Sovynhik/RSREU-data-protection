@@ -5,12 +5,24 @@ import ru.rsreu.sovynhik.pract_03.model.*;
 import ru.rsreu.sovynhik.pract_03.service.*;
 import java.util.*;
 
+/**
+ * Консольный пользовательский интерфейс для взаимодействия с системой дискреционного управления доступом (DAC).
+ * Обеспечивает аутентификацию пользователей, выполнение операций чтения, записи, передачи прав
+ * и отображение текущей матрицы доступа.
+ */
 public class ConsoleUI {
     private final AuthenticationService authenticationService;
     private final AccessMatrixService accessMatrixService;
     private final AuthorizationService authorizationService;
     private final Scanner scanner;
 
+    /**
+     * Создает консольный интерфейс с указанными сервисами.
+     *
+     * @param authenticationService сервис аутентификации
+     * @param accessMatrixService   сервис матрицы доступа
+     * @param authorizationService  сервис авторизации
+     */
     public ConsoleUI(AuthenticationService authenticationService,
                      AccessMatrixService accessMatrixService,
                      AuthorizationService authorizationService) {
@@ -20,6 +32,10 @@ public class ConsoleUI {
         this.scanner = new Scanner(System.in);
     }
 
+    /**
+     * Запускает основной цикл работы приложения.
+     * После каждого завершения сессии пользователя начинается новый цикл аутентификации.
+     */
     public void start() {
         printWelcomeMessage();
         while (true) {
@@ -28,11 +44,21 @@ public class ConsoleUI {
         }
     }
 
+    /**
+     * Выводит приветственное сообщение и разделитель.
+     */
     private void printWelcomeMessage() {
         System.out.println(Constants.MSG_WELCOME);
         System.out.println(Constants.MSG_SEPARATOR);
     }
 
+    /**
+     * Выполняет аутентификацию пользователя.
+     * Запрашивает имя пользователя и проверяет его наличие в системе.
+     * При успешной аутентификации выводит приветствие и права пользователя.
+     *
+     * @return {@link Optional} с аутентифицированным пользователем или пустой Optional при неудаче
+     */
     private Optional<User> login() {
         System.out.print(Constants.MSG_ENTER_USER);
         String userId = scanner.nextLine().trim();
@@ -49,6 +75,11 @@ public class ConsoleUI {
         }
     }
 
+    /**
+     * Отображает права текущего пользователя на все объекты.
+     *
+     * @param user пользователь
+     */
     private void showUserRights(User user) {
         System.out.println(Constants.MSG_YOUR_RIGHTS);
         Map<SystemObject, Set<Right>> rights = accessMatrixService.getUserRights(user);
@@ -59,6 +90,13 @@ public class ConsoleUI {
         }
     }
 
+    /**
+     * Форматирует множество прав в строку для отображения.
+     * Особые случаи: {@link Right#DENIED} и пустое множество.
+     *
+     * @param rights множество прав
+     * @return отформатированная строка
+     */
     private String formatRights(Set<Right> rights) {
         if (rights.contains(Right.DENIED)) return Constants.RIGHT_DENIED;
         if (rights.isEmpty()) return Constants.MSG_NO_RIGHTS;
@@ -69,6 +107,12 @@ public class ConsoleUI {
         return String.join(", ", rightNames);
     }
 
+    /**
+     * Управляет сессией аутентифицированного пользователя.
+     * В цикле обрабатывает вводимые пользователем команды до выхода.
+     *
+     * @param user текущий пользователь
+     */
     private void userSession(User user) {
         while (true) {
             System.out.print(Constants.MSG_PROMPT);
@@ -98,6 +142,12 @@ public class ConsoleUI {
         }
     }
 
+    /**
+     * Обрабатывает команду чтения.
+     * Запрашивает имя объекта и проверяет право на чтение.
+     *
+     * @param user текущий пользователь
+     */
     private void processRead(User user) {
         System.out.print(Constants.PROMPT_READ_OBJECT);
         String objectName = scanner.nextLine().trim();
@@ -113,6 +163,12 @@ public class ConsoleUI {
         }
     }
 
+    /**
+     * Обрабатывает команду записи.
+     * Запрашивает имя объекта и проверяет право на запись.
+     *
+     * @param user текущий пользователь
+     */
     private void processWrite(User user) {
         System.out.print(Constants.PROMPT_WRITE_OBJECT);
         String objectName = scanner.nextLine().trim();
@@ -128,6 +184,12 @@ public class ConsoleUI {
         }
     }
 
+    /**
+     * Обрабатывает команду передачи прав.
+     * Запрашивает объект, право и целевого пользователя, выполняет проверки и передачу.
+     *
+     * @param user текущий пользователь (источник прав)
+     */
     private void processGrant(User user) {
         System.out.print(Constants.PROMPT_GRANT_OBJECT);
         String objectName = scanner.nextLine().trim();
@@ -153,13 +215,11 @@ public class ConsoleUI {
             return;
         }
 
-        // Проверка, есть ли уже у целевого пользователя это право
         if (accessMatrixService.checkAccess(targetUser.get(), objectName, right)) {
             System.out.println(Constants.MSG_RIGHT_ALREADY_EXISTS);
             return;
         }
 
-        // Проверка, не станет ли целевой пользователь администратором
         if (accessMatrixService.wouldTransferMakeAdmin(targetUser.get(), objectName, right)) {
             System.out.println(Constants.MSG_CANT_MAKE_ADMIN);
             return;
@@ -177,6 +237,9 @@ public class ConsoleUI {
         }
     }
 
+    /**
+     * Отображает полную матрицу доступа для всех пользователей и объектов.
+     */
     private void processShow() {
         Map<User, Map<SystemObject, Set<Right>>> matrix = accessMatrixService.getAllRightsMatrix();
         System.out.println("\nМатрица доступа:");
