@@ -1,2 +1,3 @@
 rootProject.name = "RSREU-data-protection"
-
+include("03-practice")
+include("04-practice")
