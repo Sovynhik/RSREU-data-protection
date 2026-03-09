@@ -1,7 +1,6 @@
 package ru.rsreu.sovynhik.pract_04.ui;
 
 import ru.rsreu.sovynhik.pract_04.model.*;
-import ru.rsreu.sovynhik.pract_04.utils.InputValidator;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,10 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RegisterDialog extends JDialog {
-    private JTextField loginField;
-    private JPanel questionsPanel;
-    private List<String> selectedQuestions;
-    private List<JTextField> answerFields;
+    private final JTextField loginField;
+    private final List<String> selectedQuestions;
+    private final List<JTextField> answerFields;
     private final PasswordGenerator passwordGenerator;
     private final int passwordLength;
 
@@ -34,7 +32,7 @@ public class RegisterDialog extends JDialog {
         add(topPanel, BorderLayout.NORTH);
 
         // Панель с вопросами
-        questionsPanel = new JPanel();
+        JPanel questionsPanel = new JPanel();
         questionsPanel.setLayout(new BoxLayout(questionsPanel, BoxLayout.Y_AXIS));
         JScrollPane scrollPane = new JScrollPane(questionsPanel);
         add(scrollPane, BorderLayout.CENTER);

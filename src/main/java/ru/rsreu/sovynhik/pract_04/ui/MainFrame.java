@@ -16,7 +16,6 @@ public class MainFrame extends JFrame {
     private JTextField fieldUserCount;
     private JTextField fieldSStar;
     private JTextField fieldMinLength;
-    private JTable tablePasswords;
     private DefaultTableModel tableModel;
 
     public MainFrame() {
@@ -31,9 +30,22 @@ public class MainFrame extends JFrame {
         setLocationRelativeTo(null);
         setLayout(new BorderLayout(10, 10));
 
-        add(createInputPanel(), BorderLayout.WEST);
-        add(createButtonPanel(), BorderLayout.CENTER);
-        add(createOutputPanel(), BorderLayout.EAST);
+        // Создаём панели
+        JPanel inputPanel = createInputPanel();
+        JPanel outputPanel = createOutputPanel();
+
+        // Разделитель между входными данными и результатами
+        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, inputPanel, outputPanel);
+        splitPane.setResizeWeight(0.3); // 30% для левой панели, 70% для правой
+        splitPane.setDividerSize(8);
+        splitPane.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+
+        // Панель с кнопками размещаем в центре (между splitPane и информационной панелью)
+        JPanel centerPanel = new JPanel(new BorderLayout());
+        centerPanel.add(splitPane, BorderLayout.CENTER);
+        centerPanel.add(createButtonPanel(), BorderLayout.WEST);
+
+        add(centerPanel, BorderLayout.CENTER);
         add(createInfoPanel(), BorderLayout.SOUTH);
     }
 
@@ -149,7 +161,7 @@ public class MainFrame extends JFrame {
         gbc.fill = GridBagConstraints.BOTH;
 
         tableModel = new DefaultTableModel(new String[]{"№", "Пароль"}, 0);
-        tablePasswords = new JTable(tableModel);
+        JTable tablePasswords = new JTable(tableModel);
         tablePasswords.setFont(new Font("Monospaced", Font.PLAIN, 14));
         tablePasswords.getColumnModel().getColumn(0).setPreferredWidth(30);
         tablePasswords.getColumnModel().getColumn(1).setPreferredWidth(200);
@@ -171,7 +183,7 @@ public class MainFrame extends JFrame {
 
     private void setDefaultValues() {
         fieldP.setText("1e-4");
-        fieldV.setText("3");          // для 9-го варианта
+        fieldV.setText("3");
         fieldT.setText("15");
         fieldUserCount.setText("10");
     }
