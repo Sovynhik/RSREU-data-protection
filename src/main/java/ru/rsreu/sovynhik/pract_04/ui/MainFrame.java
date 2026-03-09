@@ -16,7 +16,6 @@ public class MainFrame extends JFrame {
     private JTextField fieldUserCount;
     private JTextField fieldSStar;
     private JTextField fieldMinLength;
-    private JTable tablePasswords;
     private DefaultTableModel tableModel;
 
     public MainFrame() {
@@ -31,10 +30,22 @@ public class MainFrame extends JFrame {
         setLocationRelativeTo(null);
         setLayout(new BorderLayout(10, 10));
 
-        // Создание панелей
-        add(createInputPanel(), BorderLayout.WEST);
-        add(createButtonPanel(), BorderLayout.CENTER);
-        add(createOutputPanel(), BorderLayout.EAST);
+        // Создаём панели
+        JPanel inputPanel = createInputPanel();
+        JPanel outputPanel = createOutputPanel();
+
+        // Разделитель между входными данными и результатами
+        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, inputPanel, outputPanel);
+        splitPane.setResizeWeight(0.3); // 30% для левой панели, 70% для правой
+        splitPane.setDividerSize(8);
+        splitPane.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+
+        // Панель с кнопками размещаем в центре (между splitPane и информационной панелью)
+        JPanel centerPanel = new JPanel(new BorderLayout());
+        centerPanel.add(splitPane, BorderLayout.CENTER);
+        centerPanel.add(createButtonPanel(), BorderLayout.WEST);
+
+        add(centerPanel, BorderLayout.CENTER);
         add(createInfoPanel(), BorderLayout.SOUTH);
     }
 
@@ -52,7 +63,6 @@ public class MainFrame extends JFrame {
         JTextField[] fields = {fieldP = new JTextField(), fieldV = new JTextField(),
                 fieldT = new JTextField(), fieldUserCount = new JTextField()};
 
-        // Подсказки
         fieldP.setToolTipText("Например: 0.0001, 1e-4, 10^-4");
         fieldV.setToolTipText("Скорость перебора (паролей в минуту)");
         fieldT.setToolTipText("Срок действия пароля в днях");
@@ -69,7 +79,6 @@ public class MainFrame extends JFrame {
             gbc.weightx = 1.0;
             panel.add(fields[i], gbc);
         }
-
         return panel;
     }
 
@@ -82,7 +91,7 @@ public class MainFrame extends JFrame {
         gbc.gridy = 0;
         gbc.insets = new Insets(5, 5, 5, 5);
 
-        // Кнопка генерации паролей (вторая часть)
+        // Кнопка генерации паролей
         JButton btnGenerate = new JButton("Генератор паролей");
         btnGenerate.setFont(new Font("SansSerif", Font.BOLD, 14));
         btnGenerate.setBackground(new Color(0, 120, 215));
@@ -92,7 +101,7 @@ public class MainFrame extends JFrame {
         btnGenerate.addActionListener(e -> generate());
         panel.add(btnGenerate, gbc);
 
-        // Кнопка метода "запрос-ответ" (первая часть)
+        // Кнопка метода "запрос-ответ"
         gbc.gridy = 1;
         JButton btnAuth = new JButton("Метод запрос-ответ");
         btnAuth.setFont(new Font("SansSerif", Font.BOLD, 14));
@@ -106,6 +115,17 @@ public class MainFrame extends JFrame {
         });
         panel.add(btnAuth, gbc);
 
+        // Кнопка регистрации
+        gbc.gridy = 2;
+        JButton btnRegister = new JButton("Регистрация");
+        btnRegister.setFont(new Font("SansSerif", Font.BOLD, 14));
+        btnRegister.setBackground(new Color(0, 100, 150));
+        btnRegister.setForeground(Color.WHITE);
+        btnRegister.setFocusPainted(false);
+        btnRegister.setPreferredSize(new Dimension(220, 50));
+        btnRegister.addActionListener(e -> openRegisterDialog());
+        panel.add(btnRegister, gbc);
+
         return panel;
     }
 
@@ -117,9 +137,7 @@ public class MainFrame extends JFrame {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.gridwidth = 1;
 
-        // S*
         gbc.gridx = 0; gbc.gridy = 0;
         panel.add(new JLabel("Нижняя граница S*:"), gbc);
         gbc.gridx = 0; gbc.gridy = 1;
@@ -128,7 +146,6 @@ public class MainFrame extends JFrame {
         fieldSStar.setBackground(Color.WHITE);
         panel.add(fieldSStar, gbc);
 
-        // L
         gbc.gridx = 0; gbc.gridy = 2;
         panel.add(new JLabel("Минимальная длина L:"), gbc);
         gbc.gridx = 0; gbc.gridy = 3;
@@ -137,7 +154,6 @@ public class MainFrame extends JFrame {
         fieldMinLength.setBackground(Color.WHITE);
         panel.add(fieldMinLength, gbc);
 
-        // Таблица паролей
         gbc.gridx = 0; gbc.gridy = 4;
         panel.add(new JLabel("Сгенерированные пароли:"), gbc);
         gbc.gridx = 0; gbc.gridy = 5;
@@ -145,7 +161,7 @@ public class MainFrame extends JFrame {
         gbc.fill = GridBagConstraints.BOTH;
 
         tableModel = new DefaultTableModel(new String[]{"№", "Пароль"}, 0);
-        tablePasswords = new JTable(tableModel);
+        JTable tablePasswords = new JTable(tableModel);
         tablePasswords.setFont(new Font("Monospaced", Font.PLAIN, 14));
         tablePasswords.getColumnModel().getColumn(0).setPreferredWidth(30);
         tablePasswords.getColumnModel().getColumn(1).setPreferredWidth(200);
@@ -167,13 +183,12 @@ public class MainFrame extends JFrame {
 
     private void setDefaultValues() {
         fieldP.setText("1e-4");
-        fieldV.setText("9");
+        fieldV.setText("3");
         fieldT.setText("15");
         fieldUserCount.setText("10");
     }
 
     private void generate() {
-        // Валидация
         InputValidator.ValidationResult result = InputValidator.validate(
                 fieldP.getText(), fieldV.getText(), fieldT.getText(), fieldUserCount.getText());
 
@@ -182,20 +197,31 @@ public class MainFrame extends JFrame {
             return;
         }
 
-        // Расчёт параметров
         PasswordCalculator calculator = new PasswordCalculator(result.P, result.V, result.T, PasswordGenerator.ALPHABET_SIZE);
         fieldSStar.setText(formatNumber(calculator.getS_star()));
         fieldMinLength.setText(String.valueOf(calculator.getMinLength()));
 
-        // Генерация паролей
         PasswordGenerator generator = new PasswordGenerator();
         List<String> passwords = generator.generatePasswords(result.userCount, calculator.getMinLength());
 
-        // Отображение в таблице
         tableModel.setRowCount(0);
         for (int i = 0; i < passwords.size(); i++) {
             tableModel.addRow(new Object[]{i + 1, passwords.get(i)});
         }
+    }
+
+    private void openRegisterDialog() {
+        InputValidator.ValidationResult result = InputValidator.validate(
+                fieldP.getText(), fieldV.getText(), fieldT.getText(), "1");
+        if (!result.success) {
+            JOptionPane.showMessageDialog(this,
+                    "Для регистрации необходимо корректно заполнить поля P, V, T.\n" + result.errorMessage,
+                    "Ошибка", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        RegisterDialog dialog = new RegisterDialog(this, result.P, result.V, result.T);
+        dialog.setVisible(true);
     }
 
     private String formatNumber(long number) {

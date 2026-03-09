@@ -1,13 +1,13 @@
 package ru.rsreu.sovynhik.pract_04.model;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class UserDatabase {
-    // Карта: логин -> учётная запись пользователя
-    private static final Map<String, UserAccount> users = new HashMap<>();
+    private static final Map<String, UserAccount> users = new ConcurrentHashMap<>();
 
     static {
-        // Создаём учётные записи с индивидуальными вопросами
+        // Предустановленные пользователи
         List<QuestionAnswer> user1Questions = Arrays.asList(
                 new QuestionAnswer("Ваш любимый цвет?", "синий"),
                 new QuestionAnswer("Город рождения?", "Москва"),
@@ -30,24 +30,25 @@ public class UserDatabase {
         users.put("admin", new UserAccount("admin", adminQuestions));
     }
 
-    // Поиск пользователя по логину
     public static UserAccount findUser(String login) {
         return users.get(login);
     }
 
-    // Получение случайных вопросов для пользователя
+    public static void addUser(UserAccount user) {
+        users.put(user.login(), user);
+    }
+
     public static List<QuestionAnswer> getRandomQuestionsForUser(String login, int count) {
         UserAccount user = findUser(login);
         if (user == null) {
             return Collections.emptyList();
         }
-        List<QuestionAnswer> shuffled = new ArrayList<>(user.getQuestions());
+        List<QuestionAnswer> shuffled = new ArrayList<>(user.questions());
         Collections.shuffle(shuffled);
         return shuffled.subList(0, Math.min(count, shuffled.size()));
     }
 
-    // Проверка ответа (регистронезависимая)
     public static boolean checkAnswer(QuestionAnswer qa, String userAnswer) {
-        return qa.getAnswer().trim().equalsIgnoreCase(userAnswer.trim());
+        return qa.answer().trim().equalsIgnoreCase(userAnswer.trim());
     }
 }

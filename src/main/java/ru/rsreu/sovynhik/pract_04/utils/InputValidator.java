@@ -1,7 +1,5 @@
 package ru.rsreu.sovynhik.pract_04.utils;
 
-import javax.swing.*;
-
 public class InputValidator {
 
     public static ValidationResult validate(String pText, String vText, String tText, String userCountText) {

@@ -21,7 +21,8 @@ public class PasswordCalculator {
         long Tminutes = T * 24L * 60L;
         double totalAttempts = V * Tminutes;
         S_star = (long) Math.ceil(totalAttempts / P);
-        minLength = (int) Math.ceil(Math.log(S_star) / Math.log(alphabetSize));
+        int calculatedLength = (int) Math.ceil(Math.log(S_star) / Math.log(alphabetSize));
+        minLength = Math.max(calculatedLength, 6);
     }
 
     public long getS_star() {
