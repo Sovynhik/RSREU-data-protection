@@ -1,6 +1,6 @@
-package ru.rsreu.sovynhik;
+package ru.rsreu.sovynhik.cipher;
 
-interface Cipher {
+public interface Cipher {
     String encrypt(String input);
     String decrypt(String input);
 }

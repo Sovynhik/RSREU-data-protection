@@ -1,6 +1,9 @@
 package ru.rsreu.sovynhik;
 
 import com.formdev.flatlaf.FlatLightLaf;
+import ru.rsreu.sovynhik.cipher.Cipher;
+import ru.rsreu.sovynhik.cipher.PermutationCipher;
+import ru.rsreu.sovynhik.ui.PermutationCipherGUI;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,7 +22,7 @@ public class Main {
         }
 
         SwingUtilities.invokeLater(() -> {
-            GammaCipherGUI frame = new GammaCipherGUI(cipher);
+            PermutationCipherGUI frame = new PermutationCipherGUI(cipher);
             frame.setVisible(true);
         });
     }

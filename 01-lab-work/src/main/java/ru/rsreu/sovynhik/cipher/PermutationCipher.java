@@ -1,4 +1,4 @@
-package ru.rsreu.sovynhik;
+package ru.rsreu.sovynhik.cipher;
 
 import java.nio.charset.StandardCharsets;
 
