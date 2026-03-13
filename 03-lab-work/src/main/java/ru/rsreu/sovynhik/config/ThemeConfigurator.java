@@ -18,6 +18,7 @@ public class ThemeConfigurator {
             UIManager.put("Button.foreground", Color.WHITE);
             UIManager.put("Button.hoverBackground", new Color(100, 150, 220));
             UIManager.put("Button.pressedBackground", new Color(50, 100, 150));
+            UIManager.put("Button.focusedBackground", new Color(70, 130, 180));
             UIManager.put("Button.focusWidth", 0);
             UIManager.put("Button.shadow", new Color(0, 0, 0, 40));
 
