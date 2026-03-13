@@ -33,14 +33,17 @@ public class MainFrame extends JFrame {
         // Кнопки управления
         JPanel controlPanel = new JPanel(new FlowLayout());
         JButton btnLoadExample = new JButton("Загрузить пример");
+        styleButton(btnLoadExample, new Color(76, 175, 80), Color.WHITE); // зелёный
         btnLoadExample.addActionListener(e -> loadExampleText());
         controlPanel.add(btnLoadExample);
 
         JButton btnCompare = new JButton("Сравнить шифрограммы");
+        styleButton(btnCompare, new Color(255, 152, 0), Color.WHITE); // оранжевый
         btnCompare.addActionListener(e -> compareCiphergrams());
         controlPanel.add(btnCompare);
 
         JButton btnClear = new JButton("Очистить всё");
+        styleButton(btnClear, new Color(244, 67, 54), Color.WHITE); // красный
         btnClear.addActionListener(e -> clearAll());
         controlPanel.add(btnClear);
 
@@ -56,6 +59,16 @@ public class MainFrame extends JFrame {
 
         pack();
         setLocationRelativeTo(null);
+    }
+
+    /** Единый метод для стилизации кнопок (FlatLaf) */
+    private void styleButton(JButton button, Color background, Color foreground) {
+        button.setBackground(background);
+        button.setForeground(foreground);
+        // Скруглённые углы (работает только в FlatLaf)
+        button.putClientProperty("JButton.arc", 12);
+        // FlatLaf автоматически обработает hover и pressed
+        button.setFocusPainted(false); // убираем контур фокуса для чистоты
     }
 
     private void loadExampleText() {
@@ -105,6 +118,10 @@ public class MainFrame extends JFrame {
             this.title = title;
             setBorder(BorderFactory.createTitledBorder(title));
             setLayout(new BorderLayout(5, 5));
+
+            // Стилизация кнопок варианта
+            styleButton(btnEncrypt, new Color(33, 150, 243), Color.WHITE); // синий
+            styleButton(btnDecrypt, new Color(76, 175, 80), Color.WHITE);  // зелёный
 
             // Панель ввода параметров
             JPanel paramsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
