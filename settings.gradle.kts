@@ -1,9 +1,11 @@
 rootProject.name = "RSREU-data-protection"
-include("03-practice")
-include("04-practice")
-include("06-lab-work")
-include("01-lab-work")
-include("02-lab-work")
-include("03-lab-work")
-include("04-lab-work")
-include("05-lab-work")
+
+include("pr-03")
+include("pr-04")
+
+include("lab-01")
+include("lab-02")
+include("lab-03")
+include("lab-04")
+include("lab-05")
+include("lab-06")
