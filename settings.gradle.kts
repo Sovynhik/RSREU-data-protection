@@ -9,3 +9,5 @@ include("lab-03")
 include("lab-04")
 include("lab-05")
 include("lab-06")
+
+include("lab-07")
